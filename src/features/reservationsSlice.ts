@@ -21,11 +21,18 @@ const reservationsSlice = createSlice({
             state.list = state.list.filter((r)=> r.id !== action.payload)
         },
         updateReservation: (state, action:PayloadAction<IReservation>) => {
-            const {payload:{id, fullname, time, tableNumber}} = action
+            const {id, fullname, time, tableNumber} = action.payload
             state.list = state.list.map((r) => r.id === id ? {...r, fullname, time, tableNumber} : r)
+        },
+        clearAllReservations: (state) => {
+            state.list = []
         }
     }
 })
 
 export default reservationsSlice.reducer
-export const {addReservation, removeReservation, updateReservation} = reservationsSlice.actions
+export const {
+    addReservation, 
+    removeReservation, 
+    updateReservation, 
+    clearAllReservations} = reservationsSlice.actions

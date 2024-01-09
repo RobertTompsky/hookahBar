@@ -1,20 +1,24 @@
+import { ReactNode } from "react";
 
+type changeQty = (operation: string) => void
 interface CustomButtonProps {
     containerStyles?: string,
-    title: string,
-    onClick?: () => void,
+    title?: string,
+    icon?: ReactNode
+    onClick?: () => void | changeQty,
     textStyles?: string
 }
 
-const CustomButton = ({containerStyles, title, onClick, textStyles}: CustomButtonProps) => {
+const CustomButton = ({containerStyles, title, onClick, textStyles, icon}: CustomButtonProps) => {
     return (
         <button 
         onClick={onClick}
-        className={`p-1 rounded-xl shadow-lg ${containerStyles}`}>
-            <span
+        className={`btn rounded-2xl ${containerStyles}`}>
+            {icon && <span>{icon}</span>}
+            {title && <span
             className={`font-semibold ${textStyles}`}>
                 {title}
-            </span>
+            </span>}
         </button>
     );
 };

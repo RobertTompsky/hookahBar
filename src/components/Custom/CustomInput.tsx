@@ -13,7 +13,7 @@ const CustomInput = ({name, value, customStyles, onChange, placeholder}: CustomI
         <input 
         name={name}
         value={value}
-        className={`px-2 py-1 bg-zinc-50 rounded-md ${customStyles}`}
+        className={`input input-sm ${customStyles}`}
         onChange={onChange}
         placeholder={placeholder}
         />

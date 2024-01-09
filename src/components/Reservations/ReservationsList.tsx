@@ -5,13 +5,13 @@ import ReservationCard from './ReservationCard';
 const ReservationsList: FC = () => {
     const reservations = useAppSelector((state) => state.reservations.list)
     return (
-        <div className="overflow-auto flex flex-col gap-2">
+        <nav className="mt-3 overflow-auto flex flex-col gap-4">
             {reservations.map((reservation) => (
                 <ReservationCard
                     key={reservation.id}
                     reservation={reservation} />
             ))}
-        </div>
+        </nav>
     );
 };
 

@@ -1,43 +1,48 @@
 import { useState } from "react";
 import { IReservation } from "../../types/types";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { addReservation } from "../../features/reservationsSlice";
 import { v4 as uuidv4 } from 'uuid'
 import CustomButton from "../Custom/CustomButton";
 import CustomInput from "../Custom/CustomInput";
-import { TIME } from "../../utils/CreateArr";
+import { filteredTime } from "../../utils/CreateArr";
+import { reserveTable } from "../../features/tableSlice";
+import { useFreeTables } from "../../hooks/useFreeTables";
+import { useReservation } from "../../hooks/useReservation";
+import CustomSelect from "../Custom/CustomSelect";
 
 const NewReservation = () => {
     const dispatch = useAppDispatch()
-    const tables = useAppSelector(state => state.tables.list)
+
+    const freeTables = useFreeTables()
     const initialReservation: IReservation = {
-        fullname: '',
+        fullname: 'Гитлер',
         id: '',
-        time: '',
-        tableNumber: 0
+        time: filteredTime[0],
+        tableNumber: freeTables.length > 0 ? freeTables[0].tableNumber : 1
     }
     const [reservation, setReservation] = useState(initialReservation)
+    useReservation(freeTables, setReservation)
+
     const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
-        const strOrNumValue: string | number = isNaN(Number(value))
-            ? value
-            : Number(value)
+        const strOrNumValue: string | number = Number(value) || value
+        console.log({ ...reservation, [name]: strOrNumValue })
         setReservation({ ...reservation, [name]: strOrNumValue })
-        console.log(reservation)
     }
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (reservation.fullname && reservation.time && reservation.tableNumber) {
-            dispatch(addReservation({ ...reservation, id: uuidv4() }))
+        if (reservation.fullname.length > 3) {
+            const id = uuidv4()
+            dispatch(addReservation({ ...reservation, id }))
+            dispatch(reserveTable({ tableNumber: reservation.tableNumber, id }))
             setReservation(initialReservation)
-            console.log(reservation)
         } else {
             alert('Заполните поля')
         }
     }
 
-    // можно будет еще добавить проверку на уже существующего гостя
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
             <CustomInput
@@ -45,32 +50,35 @@ const NewReservation = () => {
                 name="fullname"
                 onChange={handleChange}
                 value={reservation.fullname}
-                customStyles="bg-slate-200 text-zinc-800" />
-            <select
-                className="p-1 rounded-md"
+                customStyles="text-zinc-800 w-full" 
+            />
+            <CustomSelect
+                customStyles="select select-sm w-full"
                 name="time"
                 value={reservation.time}
-                onChange={handleChange}>
-                {TIME.map((time, index) => (
-                    <option key={index}>
-                        {time}
-                    </option>
-                ))}
-            </select>
-            <select
-                className="p-1 rounded-md"
+                onChange={handleChange}
+                options={filteredTime.map((time) => (
+                    {
+                        value: time,
+                        title: time
+                    }
+                ))} 
+            />
+            <CustomSelect
+                customStyles="select select-sm w-full"
                 name="tableNumber"
                 value={reservation.tableNumber}
-                onChange={handleChange}>
-                {tables.map((table) => (
-                    <option key={table.tableNumber}>
-                        {table.tableNumber}
-                    </option>
-                ))}
-            </select>
+                onChange={handleChange}
+                options={freeTables.map(({ tableNumber }) => (
+                    {
+                        value: tableNumber, 
+                        title: tableNumber
+                    }
+                ))} 
+            />
             <CustomButton
                 title="СОЗДАТЬ БРОНЬ"
-                containerStyles="bg-cyan-500"
+                containerStyles="btn-neutral w-full btn-sm"
                 textStyles="text-white"
             />
         </form>

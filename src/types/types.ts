@@ -10,5 +10,14 @@ export interface ITable {
     fullname: string,
     time: string,
     tableNumber: number,
-    order: string[],
+    order: OrderItem[],
+    status: Status
+}
+
+export type Status = 'free'| 'reserved' | 'onWork'
+
+export type OrderItem = {
+    name: string,
+    quantity: number,
+    price: number,
 }

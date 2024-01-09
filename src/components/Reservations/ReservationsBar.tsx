@@ -7,7 +7,7 @@ import ReservationsList from "./ReservationsList";
 const ReservationsBar: FC = () => {
     return (
         <section
-            className="flex flex-col bg-zinc-50 p-8 
+            className="flex flex-col p-8 
             w-1/3 justify-between h-full">
             <div className="flex flex-col h-4/6">
                 <h1 className="self-center text-3xl 

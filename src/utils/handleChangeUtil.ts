@@ -11,7 +11,7 @@ export const handleChange = <T>(
   setState: Dispatch<SetStateAction<T>>
 ) => {
   const { name, value } = e.target as InputEvent;
-  const strOrNumValue: string | number = isNaN(Number(value)) ? value : Number(value);
+  const strOrNumValue: string | number = Number(value) || value;
   setState({
     ...state,
     [name]: strOrNumValue,
