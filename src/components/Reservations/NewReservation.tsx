@@ -16,7 +16,7 @@ const NewReservation = () => {
 
     const freeTables = useFreeTables()
     const initialReservation: IReservation = {
-        fullname: 'Гитлер',
+        fullname: 'Посетитель',
         id: '',
         time: filteredTime[0],
         tableNumber: freeTables.length > 0 ? freeTables[0].tableNumber : 1
